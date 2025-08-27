@@ -1,0 +1,2 @@
+- follow the instructions in thr dev-instructions.md file
+- keep track of the project development updates in the updates.md file and update it evrytime there is a change in the project
