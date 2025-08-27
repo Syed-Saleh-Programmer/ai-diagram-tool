@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     // Validate diagram type if provided
     const validDiagramTypes: DiagramType[] = [
       'component', 'deployment', 'class', 'sequence', 
-      'usecase', 'activity', 'state', 'auto'
+      'usecase', 'activity', 'state'
     ];
     
     if (body.diagramType && !validDiagramTypes.includes(body.diagramType)) {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     // Generate diagram using AI
     const result = await generateDiagram(
       body.description.trim(),
-      body.diagramType || 'auto'
+      body.diagramType || 'component'
     );
 
     // Prepare response
@@ -103,7 +103,7 @@ export async function GET() {
       optionalFields: ['diagramType'],
       supportedDiagramTypes: [
         'component', 'deployment', 'class', 'sequence', 
-        'usecase', 'activity', 'state', 'auto'
+        'usecase', 'activity', 'state'
       ]
     },
     { status: 200 }

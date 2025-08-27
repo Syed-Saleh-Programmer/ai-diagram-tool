@@ -45,8 +45,7 @@ export type DiagramType =
   | 'sequence'
   | 'usecase'
   | 'activity'
-  | 'state'
-  | 'auto'; // Auto-detect
+  | 'state';
 
 export type AIProvider = 'google' | 'openai' | 'anthropic';
 

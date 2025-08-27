@@ -3,16 +3,16 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { DownloadButton } from '@/components/DownloadButton';
 import { cn } from '@/lib/utils';
 import { 
   ZoomIn, 
   ZoomOut, 
   RotateCcw, 
-  Download, 
   Edit3, 
   Maximize2, 
   Minimize2,
-  Image,
+  Image as ImageIcon,
   FileText
 } from 'lucide-react';
 
@@ -22,9 +22,12 @@ interface DiagramViewerProps {
   isLoading?: boolean;
   error?: string | null;
   onEdit?: () => void;
-  onDownload?: (format: 'svg' | 'png') => void;
   onRetry?: () => void;
   className?: string;
+  // Props for DownloadButton
+  plantumlContent?: string;
+  description?: string;
+  disabled?: boolean;
 }
 
 export function DiagramViewer({
@@ -33,9 +36,11 @@ export function DiagramViewer({
   isLoading = false,
   error,
   onEdit,
-  onDownload,
   onRetry,
-  className
+  className,
+  plantumlContent,
+  description,
+  disabled = false
 }: DiagramViewerProps) {
   const [zoom, setZoom] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -56,10 +61,6 @@ export function DiagramViewer({
   const toggleFullscreen = useCallback(() => {
     setIsFullscreen(prev => !prev);
   }, []);
-
-  const handleDownload = useCallback((format: 'svg' | 'png') => {
-    onDownload?.(format);
-  }, [onDownload]);
 
   const hasContent = svgContent || pngContent;
 
@@ -138,7 +139,7 @@ export function DiagramViewer({
                 disabled={!pngContent}
                 className="rounded-l-none"
               >
-                <Image className="h-4 w-4 mr-1" />
+                <ImageIcon className="h-4 w-4 mr-1" />
                 PNG
               </Button>
             </div>
@@ -162,34 +163,21 @@ export function DiagramViewer({
 
           <div className="flex items-center space-x-2">
             {/* Action Buttons */}
+            {(svgContent || pngContent || plantumlContent) && (
+              <DownloadButton
+                svgContent={svgContent}
+                pngContent={pngContent}
+                plantumlContent={plantumlContent}
+                description={description}
+                disabled={disabled}
+              />
+            )}
+            
             {onEdit && (
               <Button variant="outline" size="sm" onClick={onEdit}>
                 <Edit3 className="h-4 w-4 mr-1" />
                 Edit
               </Button>
-            )}
-            
-            {onDownload && (
-              <div className="flex space-x-1">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => handleDownload('svg')}
-                  disabled={!svgContent}
-                >
-                  <Download className="h-4 w-4 mr-1" />
-                  SVG
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => handleDownload('png')}
-                  disabled={!pngContent}
-                >
-                  <Download className="h-4 w-4 mr-1" />
-                  PNG
-                </Button>
-              </div>
             )}
 
             <Button variant="ghost" size="sm" onClick={toggleFullscreen}>
@@ -218,6 +206,7 @@ export function DiagramViewer({
               dangerouslySetInnerHTML={{ __html: svgContent }}
             />
           ) : viewMode === 'png' && pngContent ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={`data:image/png;base64,${pngContent}`}
               alt="PlantUML Diagram"

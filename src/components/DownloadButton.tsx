@@ -14,7 +14,7 @@ import { downloadFile, downloadBase64, generateFilename } from '@/lib/utils';
 import { 
   Download, 
   FileText, 
-  Image, 
+  Image as ImageIcon, 
   Check,
   AlertCircle
 } from 'lucide-react';
@@ -53,7 +53,7 @@ export function DownloadButton({
       {
         value: 'png',
         label: 'PNG Image',
-        icon: <Image className="h-4 w-4" />,
+        icon: <ImageIcon className="h-4 w-4" />,
         available: !!pngContent
       },
       {
@@ -74,10 +74,11 @@ export function DownloadButton({
     setDownloadStatus('idle');
 
     try {
-      const filename = generateFilename(description, selectedFormat);
+      let filename: string;
       
       switch (selectedFormat) {
         case 'svg':
+          filename = generateFilename(description, 'svg');
           if (svgContent) {
             downloadFile(svgContent, filename, 'image/svg+xml');
             onDownload?.('svg');
@@ -85,6 +86,7 @@ export function DownloadButton({
           break;
           
         case 'png':
+          filename = generateFilename(description, 'png');
           if (pngContent) {
             downloadBase64(pngContent, filename, 'image/png');
             onDownload?.('png');
@@ -92,8 +94,17 @@ export function DownloadButton({
           break;
           
         case 'plantuml':
+          // Generate custom filename for PlantUML
+          const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+          const cleanDescription = description
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 30);
+          filename = `${cleanDescription || 'diagram'}-${timestamp}.puml`;
+          
           if (plantumlContent) {
-            downloadFile(plantumlContent, filename.replace(/\.(svg|png)$/, '.puml'), 'text/plain');
+            downloadFile(plantumlContent, filename, 'text/plain');
             onDownload?.('plantuml');
           }
           break;
@@ -138,7 +149,7 @@ export function DownloadButton({
       <Button 
         variant="outline" 
         disabled 
-        className={cn("opacity-50", className)}
+        className={cn("opacity-50 border-[var(--border)]", className)}
       >
         <Download className="h-4 w-4 mr-2" />
         No Content
@@ -173,9 +184,9 @@ export function DownloadButton({
       <Button
         onClick={handleDownload}
         disabled={disabled || isDownloading || !hasContent}
-        variant={downloadStatus === 'success' ? 'default' : 'outline'}
+        variant={downloadStatus === 'success' ? 'default' : 'primary'}
         className={cn(
-          downloadStatus === 'error' && "border-red-300 text-red-600 hover:bg-red-50"
+          downloadStatus === 'error' && "border-red-300 text-red-600 hover:bg-red-50 bg-white"
         )}
       >
         {downloadStatus === 'success' ? (

@@ -7,7 +7,7 @@ import { DiagramType, AIError } from './types';
  */
 export async function generateDiagram(
   description: string,
-  diagramType: DiagramType = 'auto'
+  diagramType: DiagramType = 'component'
 ): Promise<{ description: string; plantuml: string; diagramType: DiagramType }> {
   try {
     // Validate environment variable
@@ -83,16 +83,12 @@ export async function editDiagram(
  * Create prompt for generating new diagrams
  */
 function createGeneratePrompt(description: string, diagramType: DiagramType): string {
-  const typeInstruction = diagramType === 'auto' 
-    ? 'Choose the most appropriate diagram type (component, deployment, class, sequence, usecase, activity, or state) based on the description.'
-    : `Create a ${diagramType} diagram.`;
-
   return `You are an expert software architect. Based on the following description, create a detailed architecture explanation and generate PlantUML code.
 
 Description: ${description}
 
 Instructions:
-1. ${typeInstruction}
+1. Create a ${diagramType} diagram.
 2. Provide a clear, detailed explanation of the architecture
 3. Generate clean, well-structured PlantUML code
 4. Use appropriate PlantUML syntax and best practices

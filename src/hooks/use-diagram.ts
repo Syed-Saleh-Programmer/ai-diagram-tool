@@ -34,7 +34,7 @@ export function useDiagram(options: UseDiagramOptions = {}) {
 
   const generateDiagram = useCallback(async (
     description: string,
-    diagramType: DiagramType = 'auto'
+    diagramType: DiagramType = 'component'
   ) => {
     if (!description.trim()) {
       setError('Description is required');

@@ -13,6 +13,7 @@ import {
 import { DiagramViewer } from '@/components/DiagramViewer';
 import { TextOutput } from '@/components/TextOutput';
 import { EditDialog } from '@/components/EditDialog';
+import { DownloadButton } from '@/components/DownloadButton';
 import { useDiagram } from '@/hooks/use-diagram';
 import { DiagramType } from '@/lib/types';
 import { 
@@ -57,6 +58,7 @@ export default function Home() {
     data,
     error,
     history,
+    hasData,
     generateDiagram,
     editDiagram,
     renderDiagram,
@@ -133,24 +135,24 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen w-full bg-gray-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Top Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0">
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center">
-          <Sparkles className="h-6 w-6 mr-2" style={{ color: 'var(--primary)' }} />
+          <Sparkles className="h-6 w-6 mr-2 text-blue-600" />
           <h1 className="text-xl font-semibold text-gray-900">AI Diagram Tool</h1>
         </div>
       </header>
 
       {/* Main Dashboard Layout */}
-      <div className="flex flex-1 min-h-0 w-full overflow-hidden">
+      <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar - Input Form */}
-        <div className="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+        <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
           <div className="p-6 space-y-6">
             {/* Description Input Section */}
             <div>
               <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <FileText className="h-5 w-5 mr-2" style={{ color: 'var(--primary)' }} />
+                <FileText className="h-5 w-5 mr-2 text-blue-600" />
                 Describe Your Architecture
               </h2>
               
@@ -181,9 +183,9 @@ export default function Home() {
                     <SelectContent>
                       {DIAGRAM_TYPES.map((type) => (
                         <SelectItem key={type.value} value={type.value}>
-                          <div className="flex flex-col min-w-0 w-full">
-                            <span className="font-medium text-gray-900 truncate">{type.label}</span>
-                            <span className="text-xs text-gray-500 truncate">{type.description}</span>
+                          <div className="flex flex-col">
+                            <span className="font-medium">{type.label}</span>
+                            <span className="text-xs text-gray-500">{type.description}</span>
                           </div>
                         </SelectItem>
                       ))}
@@ -196,7 +198,6 @@ export default function Home() {
                   onClick={handleGenerate}
                   disabled={!description.trim() || isLoading}
                   loading={isGenerating}
-                  variant="primary"
                   className="w-full"
                   size="lg"
                 >
@@ -269,15 +270,15 @@ export default function Home() {
         </div>
 
         {/* Main Content Area - Diagram View */}
-        <div className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden">
           {/* Tab Navigation */}
-          <div className="bg-white border-b border-gray-200 flex-shrink-0">
+          <div className="bg-white border-b border-gray-200">
             <nav className="flex px-6">
               <button
                 onClick={() => setActiveTab('description')}
                 className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === 'description'
-                    ? 'border-[var(--primary)] text-[var(--primary)]'
+                    ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -288,7 +289,7 @@ export default function Home() {
                 onClick={() => setActiveTab('diagram')}
                 className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === 'diagram'
-                    ? 'border-[var(--primary)] text-[var(--primary)]'
+                    ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -299,8 +300,8 @@ export default function Home() {
           </div>
 
           {/* Tab Content */}
-          <div className="flex-1 min-h-0 bg-white overflow-hidden">
-            <div className="p-6 h-full overflow-auto">
+          <div className="flex-1 overflow-auto bg-white">
+            <div className="p-6 h-full">
               {activeTab === 'description' ? (
                 <TextOutput
                   description={data?.description}
@@ -309,27 +310,39 @@ export default function Home() {
                   error={error}
                 />
               ) : (
-                <div className="h-full">
-                  <DiagramViewer
-                    svgContent={renderedSvg}
-                    pngContent={renderedPng}
-                    isLoading={isRendering}
-                    error={error}
-                    onEdit={() => setEditDialogOpen(true)}
-                    onRetry={() => {
-                      if (data?.plantuml) {
-                        renderDiagram(data.plantuml, 'svg').then(result => {
-                          if (result) setRenderedSvg(result.data);
-                        });
-                        renderDiagram(data.plantuml, 'png').then(result => {
-                          if (result) setRenderedPng(result.data);
-                        });
-                      }
-                    }}
-                    plantumlContent={data?.plantuml}
-                    description={data?.description}
-                    disabled={isLoading}
-                  />
+                <div className="h-full flex flex-col space-y-4">
+                  <div className="flex-1">
+                    <DiagramViewer
+                      svgContent={renderedSvg}
+                      pngContent={renderedPng}
+                      isLoading={isRendering}
+                      error={error}
+                      onEdit={() => setEditDialogOpen(true)}
+                      onRetry={() => {
+                        if (data?.plantuml) {
+                          renderDiagram(data.plantuml, 'svg').then(result => {
+                            if (result) setRenderedSvg(result.data);
+                          });
+                          renderDiagram(data.plantuml, 'png').then(result => {
+                            if (result) setRenderedPng(result.data);
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Download Controls */}
+                  {hasData && (
+                    <div className="flex justify-center">
+                      <DownloadButton
+                        svgContent={renderedSvg}
+                        pngContent={renderedPng}
+                        plantumlContent={data?.plantuml}
+                        description={data?.description}
+                        disabled={isLoading}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
