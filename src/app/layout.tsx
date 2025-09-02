@@ -67,6 +67,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.png" />
+        <meta name="google-site-verification" content="ImeNxjESTQgrNQVFRDOdK-3TCw44JI-eJDIfLRCyPzk" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
