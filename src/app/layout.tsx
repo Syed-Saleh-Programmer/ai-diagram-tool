@@ -14,8 +14,48 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Diagram Tool - Generate Architecture Diagrams with Natural Language",
-  description: "Create professional software architecture diagrams using AI. Describe your system in plain English and generate beautiful PlantUML diagrams instantly.",
+  title: "ArchiTxt - AI-Powered Architecture Diagram Generator",
+  description: "Transform your system architecture ideas into professional PlantUML diagrams using natural language. ArchiTxt makes creating software architecture diagrams fast, easy, and intuitive.",
+  keywords: [
+    "architecture diagrams",
+    "PlantUML",
+    "AI diagram generator",
+    "software architecture",
+    "system design",
+    "UML diagrams",
+    "component diagrams",
+    "sequence diagrams",
+    "deployment diagrams",
+    "natural language processing"
+  ],
+  authors: [{ name: "Syed Muhammad Saleh" }],
+  creator: "Syed Muhammad Saleh",
+  publisher: "Syed Muhammad Saleh",
+  applicationName: "ArchiTxt",
+  category: "Developer Tools",
+  classification: "Software Development",
+  openGraph: {
+    title: "ArchiTxt - AI-Powered Architecture Diagram Generator",
+    description: "Transform your system architecture ideas into professional PlantUML diagrams using natural language.",
+    type: "website",
+    siteName: "ArchiTxt",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ArchiTxt - AI-Powered Architecture Diagram Generator",
+    description: "Transform your system architecture ideas into professional PlantUML diagrams using natural language.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  verification: {
+    google: undefined, // Add Google Search Console verification if needed
+  },
 };
 
 export default function RootLayout({
@@ -25,6 +65,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

@@ -143,7 +143,7 @@ export default function Home() {
         <div className="flex items-center justify-between h-full">
           <div className="flex items-center">
             <Network className="h-5 w-5 mr-2 text-primary" />
-            <h1 className="text-lg font-semibold text-foreground">ArchiText</h1>
+            <h1 className="text-lg font-semibold text-foreground">ArchiTxt</h1>
           </div>
           <ThemeSwitcher />
         </div>

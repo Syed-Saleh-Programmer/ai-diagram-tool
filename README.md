@@ -1,8 +1,8 @@
-# AI Diagram Tool
+# ArchiTxt
 
 A powerful web-based application that transforms natural language descriptions into professional software architecture diagrams using AI and PlantUML. Built with Next.js 15, TypeScript, and Google's Gemini AI.
 
-![AI Diagram Tool](https://img.shields.io/badge/Next.js-15.5.0-black?logo=next.js)
+![ArchiTxt](https://img.shields.io/badge/Next.js-15.5.0-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
 ![React](https://img.shields.io/badge/React-19.1.0-blue?logo=react)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-06B6D4?logo=tailwindcss)
