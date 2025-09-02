@@ -72,6 +72,17 @@ export async function POST(request: NextRequest) {
     // Handle specific error types
     if (error instanceof Error) {
       if (error.name === 'AIError') {
+        // Check if it's a retry exhaustion error
+        if (error.message.includes('after 4 attempts')) {
+          return NextResponse.json(
+            { 
+              error: 'Failed to generate valid PlantUML diagram after multiple attempts. The AI is having trouble creating proper syntax. Please try rephrasing your description or try again later.',
+              details: error.message
+            },
+            { status: 502 }
+          );
+        }
+        
         return NextResponse.json(
           { error: 'AI service error: ' + error.message },
           { status: 502 }

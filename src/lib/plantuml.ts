@@ -51,7 +51,7 @@ export async function renderPlantUMLWeb(
 }
 
 /**
- * Validate PlantUML syntax
+ * Validate PlantUML syntax with enhanced checking
  */
 export function validatePlantUML(plantumlText: string): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
@@ -63,8 +63,23 @@ export function validatePlantUML(plantumlText: string): { valid: boolean; errors
   }
 
   // Check for @startuml and @enduml
-  if (!plantumlText.includes('@startuml') || !plantumlText.includes('@enduml')) {
-    errors.push('PlantUML must start with @startuml and end with @enduml');
+  const hasStart = plantumlText.includes('@startuml');
+  const hasEnd = plantumlText.includes('@enduml');
+  
+  if (!hasStart) {
+    errors.push('PlantUML must start with @startuml');
+  }
+  if (!hasEnd) {
+    errors.push('PlantUML must end with @enduml');
+  }
+  
+  // Check if @startuml comes before @enduml
+  if (hasStart && hasEnd) {
+    const startIndex = plantumlText.indexOf('@startuml');
+    const endIndex = plantumlText.indexOf('@enduml');
+    if (startIndex >= endIndex) {
+      errors.push('@startuml must come before @enduml');
+    }
   }
 
   // Check for balanced parentheses, brackets, and braces
@@ -85,6 +100,65 @@ export function validatePlantUML(plantumlText: string): { valid: boolean; errors
   
   if (stack.length > 0) {
     errors.push('Unclosed brackets or parentheses');
+  }
+
+  // Check for common PlantUML syntax errors
+  const lines = plantumlText.split('\n').map(line => line.trim());
+  
+  // Check for unterminated strings across the entire content (not line by line)
+  const entireContent = plantumlText.replace(/'/g, ''); // Remove single quotes to focus on double quotes
+  const doubleQuotes = (entireContent.match(/"/g) || []).length;
+  if (doubleQuotes % 2 !== 0) {
+    errors.push('Unterminated string - unmatched double quotes in the entire diagram');
+  }
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line || line.startsWith('\'') || line.startsWith('/\'')) continue; // Skip empty lines and comments
+    
+    // Check for invalid characters in identifiers
+    if (line.includes('-->') || line.includes('->') || line.includes('--')) {
+      // Skip PlantUML directional arrows and special syntax
+      if (line.includes('--up') || line.includes('--down') || line.includes('--left') || line.includes('--right') ||
+          line.includes('-[#') || line.includes(']') || line.includes('--o') || line.includes('--|>')) {
+        continue;
+      }
+      
+      // Relationship line - check for proper syntax
+      const parts = line.split(/-->|->/).map(p => p.trim());
+      for (const part of parts) {
+        if (part && part.includes(' ') && !part.includes(':') && !part.includes('"')) {
+          // Skip PlantUML color syntax like -[#color] and directional syntax
+          if (part.includes('-[#') || part.includes(']') || part.includes('--') || part.includes('#')) continue;
+          
+          // Might be an unquoted identifier with spaces
+          const beforeColon = part.split(':')[0].trim();
+          if (beforeColon.includes(' ') && !beforeColon.startsWith('[') && !beforeColon.startsWith('(') && !beforeColon.includes('#')) {
+            errors.push(`Line ${i + 1}: Identifier with spaces should be quoted: "${beforeColon}"`);
+          }
+        }
+      }
+    }
+  }
+
+  // Check for diagram-specific syntax
+  const diagramType = detectDiagramType(plantumlText);
+  switch (diagramType) {
+    case 'sequence':
+      if (!plantumlText.includes('actor') && !plantumlText.includes('participant') && !plantumlText.includes('->')) {
+        errors.push('Sequence diagram should contain actors/participants and message flows');
+      }
+      break;
+    case 'class':
+      if (!plantumlText.includes('class') && !plantumlText.includes('interface') && !plantumlText.includes('abstract')) {
+        errors.push('Class diagram should contain class, interface, or abstract declarations');
+      }
+      break;
+    case 'usecase':
+      if (!plantumlText.includes('actor') && !plantumlText.includes('usecase') && !plantumlText.includes('(')) {
+        errors.push('Use case diagram should contain actors and use cases');
+      }
+      break;
   }
 
   return { valid: errors.length === 0, errors };

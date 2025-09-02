@@ -4,7 +4,6 @@ import React, { useState, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { cn } from '@/lib/utils';
 import { 
   X, 
@@ -21,7 +20,6 @@ interface EditDialogProps {
   onEdit: (instructions: string) => Promise<void>;
   isLoading?: boolean;
   error?: string | null;
-  currentPlantuml?: string;
   editHistory?: string[];
 }
 
@@ -44,7 +42,6 @@ export function EditDialog({
   onEdit,
   isLoading = false,
   error,
-  currentPlantuml,
   editHistory = []
 }: EditDialogProps) {
   const [instructions, setInstructions] = useState('');
@@ -105,17 +102,6 @@ export function EditDialog({
                 </Button>
               </Dialog.Close>
             </div>
-
-            {/* Current PlantUML Preview */}
-            {currentPlantuml && (
-              <div className="mb-6 p-3 bg-gray-50 rounded-lg border">
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Current Diagram Code:</h4>
-                <pre className="text-xs text-gray-600 overflow-x-auto max-h-24">
-                  {currentPlantuml.slice(0, 200)}
-                  {currentPlantuml.length > 200 && '...'}
-                </pre>
-              </div>
-            )}
 
             {/* Edit Form */}
             <form onSubmit={handleSubmit}>
@@ -223,10 +209,7 @@ export function EditDialog({
                       loading={isLoading}
                     >
                       {isLoading ? (
-                        <>
-                          <LoadingSpinner size="sm" />
-                          <span className="ml-2">Applying Changes...</span>
-                        </>
+                        <span>Applying Changes...</span>
                       ) : (
                         <>
                           <Send className="h-4 w-4 mr-2" />

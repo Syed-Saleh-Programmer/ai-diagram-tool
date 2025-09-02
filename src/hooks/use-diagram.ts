@@ -60,7 +60,14 @@ export function useDiagram(options: UseDiagramOptions = {}) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate diagram');
+        
+        // Enhanced error handling for retry failures
+        let errorMessage = errorData.error || 'Failed to generate diagram';
+        if (errorData.details && errorData.error.includes('after multiple attempts')) {
+          errorMessage = errorData.error; // Use the detailed retry error message
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -114,7 +121,14 @@ export function useDiagram(options: UseDiagramOptions = {}) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to edit diagram');
+        
+        // Enhanced error handling for retry failures
+        let errorMessage = errorData.error || 'Failed to edit diagram';
+        if (errorData.details && errorData.error.includes('after multiple editing attempts')) {
+          errorMessage = errorData.error; // Use the detailed retry error message
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();

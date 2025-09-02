@@ -58,23 +58,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Edit diagram using AI
+    // Edit diagram using AI (with built-in retry and validation)
     const result = await editDiagram(
       body.plantuml.trim(),
       body.editInstructions.trim()
     );
-
-    // Validate the edited PlantUML code
-    const editedValidation = validatePlantUML(result.plantuml);
-    if (!editedValidation.valid) {
-      return NextResponse.json(
-        { 
-          error: 'AI generated invalid PlantUML code',
-          validationErrors: editedValidation.errors
-        },
-        { status: 502 }
-      );
-    }
 
     // Prepare response
     const response: EditResponse = {
@@ -90,6 +78,17 @@ export async function POST(request: NextRequest) {
     // Handle specific error types
     if (error instanceof Error) {
       if (error.name === 'AIError') {
+        // Check if it's a retry exhaustion error
+        if (error.message.includes('after 4 attempts')) {
+          return NextResponse.json(
+            { 
+              error: 'Failed to generate valid PlantUML after multiple editing attempts. The AI is having trouble creating proper syntax. Please try a different edit instruction or try again later.',
+              details: error.message
+            },
+            { status: 502 }
+          );
+        }
+        
         return NextResponse.json(
           { error: 'AI service error: ' + error.message },
           { status: 502 }

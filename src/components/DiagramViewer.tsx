@@ -98,7 +98,7 @@ export function DiagramViewer({
   if (!hasContent) {
     return (
       <div className={cn(
-        "flex items-center justify-center min-h-[400px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50",
+        "flex items-center justify-center min-h-full border-2 border-dashed border-gray-300 rounded-lg bg-gray-50",
         className
       )}>
         <div className="text-center text-gray-500">

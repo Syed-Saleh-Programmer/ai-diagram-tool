@@ -20,8 +20,9 @@ import {
   FileText, 
   Image as ImageIcon, 
   History,
-  AlertCircle,
-  Lightbulb
+  Lightbulb,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 
 const DIAGRAM_TYPES: Array<{ value: DiagramType; label: string; description: string }> = [
@@ -48,6 +49,7 @@ export default function Home() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [renderedSvg, setRenderedSvg] = useState<string>('');
   const [renderedPng, setRenderedPng] = useState<string>('');
+  const [examplesExpanded, setExamplesExpanded] = useState(false);
 
   const {
     isGenerating,
@@ -88,7 +90,7 @@ export default function Home() {
     if (!description.trim()) return;
     
     clearError();
-    setActiveTab('diagram');
+    setActiveTab('description');
     await generateDiagram(description, selectedDiagramType);
   };
 
@@ -145,11 +147,15 @@ export default function Home() {
       {/* Main Dashboard Layout */}
       <div className="flex flex-1 min-h-0 w-full overflow-hidden">
         {/* Left Sidebar - Input Form */}
-        <div className="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+        <div className="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
+             style={{
+               scrollbarWidth: 'thin',
+               scrollbarColor: '#d1d5db #ffffff'
+             }}>
           <div className="p-6 space-y-6">
             {/* Description Input Section */}
             <div>
-              <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <h2 className="text-sm font-semibold mb-4 flex items-center">
                 <FileText className="h-5 w-5 mr-2" style={{ color: 'var(--primary)' }} />
                 Describe Your Architecture
               </h2>
@@ -167,7 +173,7 @@ export default function Home() {
                 
                 {/* Diagram Type Selector */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
                     Diagram Type
                   </label>
                   <Select
@@ -205,48 +211,55 @@ export default function Home() {
                 </Button>
               </div>
 
-              {/* Error Display */}
-              {error && (
-                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                  <div className="flex items-start">
-                    <AlertCircle className="h-5 w-5 text-red-500 mr-2 mt-0.5" />
-                    <div>
-                      <h4 className="text-sm font-medium text-red-800">Error</h4>
-                      <p className="text-sm text-red-700 mt-1">{error}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Examples */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <Lightbulb className="h-5 w-5 mr-2 text-yellow-600" />
-                Examples
-              </h3>
-              <div className="space-y-2">
-                {EXAMPLE_DESCRIPTIONS.map((example, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleExampleClick(example)}
-                    disabled={isLoading}
-                    className="text-left w-full p-3 text-sm border rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                  >
-                    {example}
-                  </button>
-                ))}
-              </div>
+            <div className="w-full">
+              <button
+                onClick={() => setExamplesExpanded(!examplesExpanded)}
+                className="w-full flex items-center justify-between text-sm font-semibold p-3 rounded-lg hover:bg-gray-100 hover:text-black cursor-pointer transition-all duration-200"
+              >
+                <div className="flex items-center min-w-0 flex-1">
+                  <Lightbulb className="h-4 w-4 mr-2 text-yellow-600 flex-shrink-0" />
+                  <span className="truncate">Examples</span>
+                </div>
+                <div className="flex-shrink-0 ml-2">
+                  {examplesExpanded ? (
+                    <ChevronDown className="h-4 w-4 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4 text-gray-600" />
+                  )}
+                </div>
+              </button>
+              
+              {examplesExpanded && (
+                <div className="mt-3 space-y-2 animate-in slide-in-from-top-2 duration-200">
+                  {EXAMPLE_DESCRIPTIONS.map((example, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleExampleClick(example)}
+                      disabled={isLoading}
+                      className="text-left w-full p-3 text-sm border rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                    >
+                      {example}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* History */}
             {history.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <h3 className="text-sm font-semibold mb-4 flex items-center">
                   <History className="h-5 w-5 mr-2 text-gray-600" />
                   Recent
                 </h3>
-                <div className="space-y-2 max-h-40 overflow-y-auto">
+                <div className="space-y-2 max-h-40 overflow-y-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
+                     style={{
+                       scrollbarWidth: 'thin',
+                       scrollbarColor: '#d1d5db #ffffff'
+                     }}>
                   {history.slice(0, 5).map((item, index) => (
                     <button
                       key={item.timestamp}
@@ -275,9 +288,9 @@ export default function Home() {
             <nav className="flex px-6">
               <button
                 onClick={() => setActiveTab('description')}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-4 py-3 text-sm cursor-pointer font-bold border-b-2 transition-colors ${
                   activeTab === 'description'
-                    ? 'border-[var(--primary)] text-[var(--primary)]'
+                    ? 'border-[var(--primary)] text-[var(--primary)] bg-gray-50'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -286,9 +299,9 @@ export default function Home() {
               </button>
               <button
                 onClick={() => setActiveTab('diagram')}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`px-4 py-3 text-sm cursor-pointer font-bold border-b-2 transition-colors ${
                   activeTab === 'diagram'
-                    ? 'border-[var(--primary)] text-[var(--primary)]'
+                    ? 'border-[var(--primary)] text-[var(--primary)] bg-gray-50'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -299,7 +312,7 @@ export default function Home() {
           </div>
 
           {/* Tab Content */}
-          <div className="flex-1 min-h-0 bg-white overflow-hidden">
+          <div className="flex-1 min-h-full bg-white overflow-hidden">
             <div className="p-6 h-full overflow-auto">
               {activeTab === 'description' ? (
                 <TextOutput
@@ -344,7 +357,6 @@ export default function Home() {
         onEdit={handleEdit}
         isLoading={isEditing}
         error={error}
-        currentPlantuml={data?.plantuml}
       />
     </div>
   );
