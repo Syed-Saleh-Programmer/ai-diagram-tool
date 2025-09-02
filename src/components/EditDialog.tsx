@@ -85,13 +85,13 @@ export const EditDialog = memo(function EditDialog({
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl z-50 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[var(--background)] rounded-lg shadow-xl z-50 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[var(--border)]">
           <div className="p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-2">
-                <Edit3 className="h-5 w-5 text-blue-600" />
-                <Dialog.Title className="text-lg font-semibold">
+                <Edit3 className="h-5 w-5 text-[var(--primary)]" />
+                <Dialog.Title className="text-lg font-semibold text-[var(--foreground)]">
                   Edit Diagram
                 </Dialog.Title>
               </div>
@@ -108,7 +108,7 @@ export const EditDialog = memo(function EditDialog({
               <div className="space-y-4">
                 {/* Instructions Input */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
                     Edit Instructions
                   </label>
                   <Textarea
@@ -123,15 +123,15 @@ export const EditDialog = memo(function EditDialog({
                     disabled={isLoading}
                     className="w-full"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-[var(--muted-foreground)] mt-1">
                     Describe your changes in natural language. For example: &quot;Add a database&quot;, &quot;Change colors&quot;, &quot;Add more detail&quot;
                   </p>
                 </div>
 
                 {/* Error Display */}
                 {error && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-600">{error}</p>
+                  <div className="p-3 bg-[var(--destructive)]/10 border border-[var(--destructive)] rounded-lg">
+                    <p className="text-sm text-[var(--destructive)]">{error}</p>
                   </div>
                 )}
 
@@ -139,7 +139,7 @@ export const EditDialog = memo(function EditDialog({
                 <div>
                   <div className="flex items-center space-x-2 mb-3">
                     <Lightbulb className="h-4 w-4 text-yellow-500" />
-                    <span className="text-sm font-medium text-gray-700">Quick Suggestions</span>
+                    <span className="text-sm font-medium text-[var(--foreground)]">Quick Suggestions</span>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -150,8 +150,8 @@ export const EditDialog = memo(function EditDialog({
                         onClick={() => handleSuggestionClick(suggestion)}
                         disabled={isLoading}
                         className={cn(
-                          "text-left p-2 text-xs border rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors",
-                          selectedSuggestion === suggestion && "bg-blue-50 border-blue-300"
+                          "text-left p-2 text-xs border border-[var(--border)] rounded-lg hover:bg-[var(--accent)] hover:border-[var(--accent-foreground)] transition-colors text-[var(--foreground)]",
+                          selectedSuggestion === suggestion && "bg-[var(--accent)] border-[var(--accent-foreground)]"
                         )}
                       >
                         {suggestion}
@@ -164,8 +164,8 @@ export const EditDialog = memo(function EditDialog({
                 {editHistory.length > 0 && (
                   <div>
                     <div className="flex items-center space-x-2 mb-3">
-                      <History className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm font-medium text-gray-700">Recent Edits</span>
+                      <History className="h-4 w-4 text-[var(--muted-foreground)]" />
+                      <span className="text-sm font-medium text-[var(--foreground)]">Recent Edits</span>
                     </div>
                     
                     <div className="space-y-1 max-h-24 overflow-y-auto">
@@ -175,7 +175,7 @@ export const EditDialog = memo(function EditDialog({
                           type="button"
                           onClick={() => handleHistoryClick(historyItem)}
                           disabled={isLoading}
-                          className="text-left w-full p-2 text-xs text-gray-600 border rounded hover:bg-gray-50 transition-colors"
+                          className="text-left w-full p-2 text-xs text-[var(--foreground)] border border-[var(--border)] rounded hover:bg-[var(--muted)] transition-colors"
                         >
                           {historyItem}
                         </button>
@@ -185,7 +185,7 @@ export const EditDialog = memo(function EditDialog({
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex items-center justify-between pt-4 border-t">
+                <div className="flex items-center justify-between pt-4 border-t border-[var(--border)]">
                   <Button
                     type="button"
                     variant="ghost"

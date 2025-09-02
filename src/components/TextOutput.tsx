@@ -76,19 +76,19 @@ export const TextOutput = memo(function TextOutput({
     return (
       <div className={cn("space-y-4", className)}>
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-4 bg-[var(--muted)] rounded w-1/4 mb-4"></div>
           <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded"></div>
-            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-            <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+            <div className="h-4 bg-[var(--muted)] rounded"></div>
+            <div className="h-4 bg-[var(--muted)] rounded w-5/6"></div>
+            <div className="h-4 bg-[var(--muted)] rounded w-4/6"></div>
           </div>
         </div>
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-4 bg-[var(--muted)] rounded w-1/4 mb-4"></div>
           <div className="space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+            <div className="h-4 bg-[var(--muted)] rounded w-3/4"></div>
+            <div className="h-4 bg-[var(--muted)] rounded w-2/3"></div>
+            <div className="h-4 bg-[var(--muted)] rounded w-5/6"></div>
           </div>
         </div>
       </div>
@@ -99,8 +99,8 @@ export const TextOutput = memo(function TextOutput({
     const isRetryError = error.includes('after multiple attempts') || error.includes('after multiple editing attempts');
     
     return (
-      <div className={cn("p-4 border border-red-200 rounded-lg bg-red-50", className)}>
-        <div className="text-red-600">
+      <div className={cn("p-4 border border-[var(--destructive)] rounded-lg bg-[var(--destructive)]/10", className)}>
+        <div className="text-[var(--destructive)]">
           <div className="flex items-start space-x-2">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-red-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
@@ -133,10 +133,10 @@ export const TextOutput = memo(function TextOutput({
   if (!description && !plantuml) {
     return (
       <div className={cn(
-        "flex items-center justify-center min-h-full border-2 border-dashed border-gray-300 rounded-lg bg-gray-50",
+        "flex items-center justify-center min-h-full border-2 border-dashed border-[var(--border)] rounded-lg bg-[var(--muted)]",
         className
       )}>
-        <div className="text-center text-gray-500">
+        <div className="text-center text-[var(--muted-foreground)]">
           <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
           <p className="text-sm">No content generated yet</p>
         </div>
@@ -148,11 +148,11 @@ export const TextOutput = memo(function TextOutput({
     <div className={cn("space-y-4", className)}>
       {/* Architecture Description Section */}
       {description && (
-        <div className="border rounded-lg overflow-hidden">
-          <div className="bg-gray-50 px-4 py-3 border-b flex items-center justify-between">
+        <div className="border border-[var(--border)] rounded-lg overflow-hidden">
+          <div className="bg-[var(--muted)] px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
             <button
               onClick={() => setDescriptionExpanded(!descriptionExpanded)}
-              className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+              className="flex items-center space-x-2 text-sm font-medium text-[var(--foreground)] hover:text-[var(--foreground)]/80"
             >
               <FileText className="h-4 w-4" />
               <span>Architecture Description</span>
@@ -185,7 +185,7 @@ export const TextOutput = memo(function TextOutput({
           
           {descriptionExpanded && (
             <div className="p-4">
-              <div className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-strong:text-gray-900 prose-code:text-purple-600 prose-code:bg-purple-50 prose-code:px-1 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100">
+              <div className="prose prose-sm max-w-none prose-headings:text-[var(--foreground)] prose-p:text-[var(--foreground)] prose-strong:text-[var(--foreground)] prose-code:text-[var(--primary)] prose-code:bg-[var(--muted)] prose-code:px-1 prose-code:rounded prose-pre:bg-[var(--muted)] prose-pre:text-[var(--foreground)]">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeHighlight]}
@@ -201,7 +201,7 @@ export const TextOutput = memo(function TextOutput({
                       ) : (
                         // For inline code
                         <code 
-                          className="text-purple-600 bg-purple-50 px-1 py-0.5 rounded text-sm font-mono" 
+                          className="text-[var(--primary)] bg-[var(--muted)] px-1 py-0.5 rounded text-sm font-mono" 
                           {...props}
                         >
                           {children}
@@ -210,17 +210,17 @@ export const TextOutput = memo(function TextOutput({
                     },
                     // Custom styling for headings
                     h1: ({ children, ...props }) => (
-                      <h1 className="text-xl font-bold text-gray-900 mb-4 mt-6 first:mt-0" {...props}>
+                      <h1 className="text-xl font-bold text-[var(--foreground)] mb-4 mt-6 first:mt-0" {...props}>
                         {children}
                       </h1>
                     ),
                     h2: ({ children, ...props }) => (
-                      <h2 className="text-lg font-semibold text-gray-900 mb-3 mt-5" {...props}>
+                      <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3 mt-5" {...props}>
                         {children}
                       </h2>
                     ),
                     h3: ({ children, ...props }) => (
-                      <h3 className="text-base font-medium text-gray-900 mb-2 mt-4" {...props}>
+                      <h3 className="text-base font-medium text-[var(--foreground)] mb-2 mt-4" {...props}>
                         {children}
                       </h3>
                     ),
@@ -236,14 +236,14 @@ export const TextOutput = memo(function TextOutput({
                       </ol>
                     ),
                     li: ({ children, ...props }) => (
-                      <li className="text-gray-700" {...props}>
+                      <li className="text-[var(--foreground)]" {...props}>
                         {children}
                       </li>
                     ),
                     // Custom styling for blockquotes
                     blockquote: ({ children, ...props }) => (
                       <blockquote 
-                        className="border-l-4 border-blue-500 pl-4 py-2 bg-blue-50 rounded-r text-blue-900 my-4 italic" 
+                        className="border-l-4 border-[var(--primary)] pl-4 py-2 bg-[var(--accent)] rounded-r text-[var(--foreground)] my-4 italic" 
                         {...props}
                       >
                         {children}
@@ -252,47 +252,47 @@ export const TextOutput = memo(function TextOutput({
                     // Custom styling for tables
                     table: ({ children, ...props }) => (
                       <div className="overflow-x-auto my-4">
-                        <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg" {...props}>
+                        <table className="min-w-full divide-y divide-[var(--border)] border border-[var(--border)] rounded-lg" {...props}>
                           {children}
                         </table>
                       </div>
                     ),
                     thead: ({ children, ...props }) => (
-                      <thead className="bg-gray-50" {...props}>
+                      <thead className="bg-[var(--muted)]" {...props}>
                         {children}
                       </thead>
                     ),
                     th: ({ children, ...props }) => (
-                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-900 border-b border-gray-200" {...props}>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-[var(--foreground)] border-b border-[var(--border)]" {...props}>
                         {children}
                       </th>
                     ),
                     td: ({ children, ...props }) => (
-                      <td className="px-4 py-2 text-sm text-gray-700 border-b border-gray-200" {...props}>
+                      <td className="px-4 py-2 text-sm text-[var(--foreground)] border-b border-[var(--border)]" {...props}>
                         {children}
                       </td>
                     ),
                     // Custom styling for paragraphs
                     p: ({ children, ...props }) => (
-                      <p className="text-gray-700 leading-relaxed mb-3" {...props}>
+                      <p className="text-[var(--foreground)] leading-relaxed mb-3" {...props}>
                         {children}
                       </p>
                     ),
                     // Custom styling for emphasis
                     strong: ({ children, ...props }) => (
-                      <strong className="font-semibold text-gray-900" {...props}>
+                      <strong className="font-semibold text-[var(--foreground)]" {...props}>
                         {children}
                       </strong>
                     ),
                     em: ({ children, ...props }) => (
-                      <em className="italic text-gray-800" {...props}>
+                      <em className="italic text-[var(--foreground)]" {...props}>
                         {children}
                       </em>
                     ),
                     // Custom styling for links
                     a: ({ children, ...props }) => (
                       <a 
-                        className="text-blue-600 hover:text-blue-800 underline transition-colors" 
+                        className="text-[var(--primary)] hover:text-[var(--primary-hover)] underline transition-colors" 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         {...props}
@@ -316,11 +316,11 @@ export const TextOutput = memo(function TextOutput({
 
       {/* PlantUML Code Section */}
       {plantuml && (
-        <div className="border rounded-lg overflow-hidden">
-          <div className="bg-gray-50 px-4 py-3 border-b flex items-center justify-between">
+        <div className="border border-[var(--border)] rounded-lg overflow-hidden">
+          <div className="bg-[var(--muted)] px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
             <button
               onClick={() => setPlantumlExpanded(!plantumlExpanded)}
-              className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+              className="flex items-center space-x-2 text-sm font-medium text-[var(--foreground)] hover:text-[var(--foreground)]/80"
             >
               <Code2 className="h-4 w-4" />
               <span>PlantUML Code</span>
@@ -373,7 +373,7 @@ export const TextOutput = memo(function TextOutput({
           
           {plantumlExpanded && (
             <div className="relative">
-              <pre className="p-4 text-sm font-mono bg-gray-900 text-green-400 overflow-x-auto">
+              <pre className="p-4 text-sm font-mono bg-[var(--muted)] text-green-400 overflow-x-auto">
                 <code>{formatPlantUMLWithLineNumbers(plantuml)}</code>
               </pre>
             </div>

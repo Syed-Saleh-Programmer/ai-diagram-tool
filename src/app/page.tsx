@@ -13,16 +13,18 @@ import {
 import { DiagramViewer } from '@/components/DiagramViewer';
 import { TextOutput } from '@/components/TextOutput';
 import { EditDialog } from '@/components/EditDialog';
+import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { useDiagram } from '@/hooks/use-diagram';
 import { DiagramType } from '@/lib/types';
 import { 
-  Sparkles, 
+  Sparkles,
   FileText, 
   Image as ImageIcon, 
   History,
   Lightbulb,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Network
 } from 'lucide-react';
 
 const DIAGRAM_TYPES: Array<{ value: DiagramType; label: string; description: string }> = [
@@ -135,28 +137,31 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen w-full bg-gray-50 flex flex-col overflow-hidden">
+    <div className="h-screen w-full bg-background flex flex-col overflow-hidden">
       {/* Top Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0">
-        <div className="flex items-center">
-          <Sparkles className="h-6 w-6 mr-2" style={{ color: 'var(--primary)' }} />
-          <h1 className="text-xl font-semibold text-gray-900">AI Diagram Tool</h1>
+      <header className="bg-card border-b-2 border-gray-300 dark:border-gray-600 px-6 py-3 flex-shrink-0 max-h-[60px]">
+        <div className="flex items-center justify-between h-full">
+          <div className="flex items-center">
+            <Network className="h-5 w-5 mr-2 text-primary" />
+            <h1 className="text-lg font-semibold text-foreground">ArchiText</h1>
+          </div>
+          <ThemeSwitcher />
         </div>
       </header>
 
       {/* Main Dashboard Layout */}
       <div className="flex flex-1 min-h-0 w-full overflow-hidden">
         {/* Left Sidebar - Input Form */}
-        <div className="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
+        <div className="w-80 bg-card border-r-2 border-gray-300 dark:border-gray-600 flex-shrink-0 overflow-y-scroll scrollbar-thin scrollbar-track-muted scrollbar-thumb-muted-foreground hover:scrollbar-thumb-foreground"
              style={{
                scrollbarWidth: 'thin',
-               scrollbarColor: '#d1d5db #ffffff'
+               scrollbarColor: 'hsl(var(--muted-foreground)) hsl(var(--muted))'
              }}>
           <div className="p-6 space-y-6">
             {/* Description Input Section */}
             <div>
-              <h2 className="text-sm font-semibold mb-4 flex items-center">
-                <FileText className="h-5 w-5 mr-2" style={{ color: 'var(--primary)' }} />
+              <h2 className="text-sm font-semibold mb-4 flex items-center text-foreground">
+                <FileText className="h-5 w-5 mr-2 text-primary" />
                 Describe Your Architecture
               </h2>
               
@@ -173,7 +178,7 @@ export default function Home() {
                 
                 {/* Diagram Type Selector */}
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-bold text-foreground mb-2">
                     Diagram Type
                   </label>
                   <Select
@@ -188,8 +193,8 @@ export default function Home() {
                       {DIAGRAM_TYPES.map((type) => (
                         <SelectItem key={type.value} value={type.value}>
                           <div className="flex flex-col min-w-0 w-full">
-                            <span className="font-medium text-gray-900 truncate">{type.label}</span>
-                            <span className="text-xs text-gray-500 truncate">{type.description}</span>
+                            <span className="font-medium text-[var(--foreground)] truncate">{type.label}</span>
+                            <span className="text-xs text-[var(--muted-foreground)] truncate">{type.description}</span>
                           </div>
                         </SelectItem>
                       ))}
@@ -217,7 +222,7 @@ export default function Home() {
             <div className="w-full">
               <button
                 onClick={() => setExamplesExpanded(!examplesExpanded)}
-                className="w-full flex items-center justify-between text-sm font-semibold p-3 rounded-lg hover:bg-gray-100 hover:text-black cursor-pointer transition-all duration-200"
+                className="w-full flex items-center justify-between text-sm font-semibold p-3 rounded-lg hover:bg-[var(--muted)] text-[var(--foreground)] cursor-pointer transition-all duration-200"
               >
                 <div className="flex items-center min-w-0 flex-1">
                   <Lightbulb className="h-4 w-4 mr-2 text-yellow-600 flex-shrink-0" />
@@ -225,9 +230,9 @@ export default function Home() {
                 </div>
                 <div className="flex-shrink-0 ml-2">
                   {examplesExpanded ? (
-                    <ChevronDown className="h-4 w-4 text-gray-600" />
+                    <ChevronDown className="h-4 w-4 text-[var(--muted-foreground)]" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 text-gray-600" />
+                    <ChevronRight className="h-4 w-4 text-[var(--muted-foreground)]" />
                   )}
                 </div>
               </button>
@@ -239,7 +244,7 @@ export default function Home() {
                       key={index}
                       onClick={() => handleExampleClick(example)}
                       disabled={isLoading}
-                      className="text-left w-full p-3 text-sm border rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                      className="text-left w-full p-3 text-sm border border-[var(--border)] rounded-lg hover:bg-[var(--accent)] hover:border-[var(--accent-foreground)] transition-colors text-[var(--foreground)]"
                     >
                       {example}
                     </button>
@@ -251,25 +256,25 @@ export default function Home() {
             {/* History */}
             {history.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold mb-4 flex items-center">
-                  <History className="h-5 w-5 mr-2 text-gray-600" />
+                <h3 className="text-sm font-semibold mb-4 flex items-center text-[var(--foreground)]">
+                  <History className="h-5 w-5 mr-2 text-[var(--muted-foreground)]" />
                   Recent
                 </h3>
-                <div className="space-y-2 max-h-40 overflow-y-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
+                <div className="space-y-2 max-h-40 overflow-y-scroll scrollbar-thin scrollbar-track-[var(--muted)] scrollbar-thumb-[var(--muted-foreground)] hover:scrollbar-thumb-[var(--foreground)]"
                      style={{
                        scrollbarWidth: 'thin',
-                       scrollbarColor: '#d1d5db #ffffff'
+                       scrollbarColor: 'var(--muted-foreground) var(--muted)'
                      }}>
                   {history.slice(0, 5).map((item, index) => (
                     <button
                       key={item.timestamp}
                       onClick={() => handleHistoryClick(index)}
                       disabled={isLoading}
-                      className="text-left w-full p-2 text-sm border rounded hover:bg-gray-50 transition-colors"
+                      className="text-left w-full p-2 text-sm border border-[var(--border)] rounded hover:bg-[var(--muted)] transition-colors text-[var(--foreground)]"
                     >
                       <div className="flex flex-col">
                         <span className="truncate text-xs">{item.description.slice(0, 40)}...</span>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-[var(--muted-foreground)]">
                           {new Date(item.timestamp).toLocaleTimeString()}
                         </span>
                       </div>
@@ -284,14 +289,14 @@ export default function Home() {
         {/* Main Content Area - Diagram View */}
         <div className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
           {/* Tab Navigation */}
-          <div className="bg-white border-b border-gray-200 flex-shrink-0">
+          <div className="bg-[var(--background)] border-b border-[var(--border)] flex-shrink-0">
             <nav className="flex px-6">
               <button
                 onClick={() => setActiveTab('description')}
                 className={`px-4 py-3 text-sm cursor-pointer font-bold border-b-2 transition-colors ${
                   activeTab === 'description'
-                    ? 'border-[var(--primary)] text-[var(--primary)] bg-gray-50'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? 'border-[var(--primary)] text-[var(--primary)] bg-[var(--muted)]'
+                    : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 }`}
               >
                 <FileText className="h-4 w-4 mr-2 inline" />
@@ -301,8 +306,8 @@ export default function Home() {
                 onClick={() => setActiveTab('diagram')}
                 className={`px-4 py-3 text-sm cursor-pointer font-bold border-b-2 transition-colors ${
                   activeTab === 'diagram'
-                    ? 'border-[var(--primary)] text-[var(--primary)] bg-gray-50'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? 'border-[var(--primary)] text-[var(--primary)] bg-[var(--muted)]'
+                    : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 }`}
               >
                 <ImageIcon className="h-4 w-4 mr-2 inline" />
@@ -312,7 +317,7 @@ export default function Home() {
           </div>
 
           {/* Tab Content */}
-          <div className="flex-1 min-h-full bg-white overflow-hidden">
+          <div className="flex-1 min-h-full bg-[var(--background)] overflow-hidden">
             <div className="p-6 h-full overflow-auto">
               {activeTab === 'description' ? (
                 <TextOutput

@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
 /* Import highlight.js theme for syntax highlighting */
-@import "highlight.js/styles/github-dark.css";
+@import "highlight.js/styles/github.css";
+
+.dark {
+  /* Override highlight.js styles for dark mode */
+  pre code.hljs {
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+  }
+}
 
 :root {
   --background: #ffffff;
@@ -32,25 +40,31 @@
   /* Destructive */
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
+  
+  /* Popover (for dropdowns) */
+  --popover: #ffffff;
+  --popover-foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
-    --primary-foreground: #ffffff;
-    --secondary: #1e293b;
-    --secondary-foreground: #f8fafc;
-    --accent: #1e293b;
-    --accent-foreground: #f8fafc;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --border: #334155;
-    --input: #334155;
-    --ring: #3b82f6;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --border: #334155;
+  --input: #334155;
+  --ring: #3b82f6;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --popover: #0a0a0a;
+  --popover-foreground: #ededed;
 }
 
 body {
@@ -59,39 +73,65 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Custom thin scrollbar styles */
+/* Universal scrollbar styles - very thin and dim */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark mode scrollbar adjustments */
+.dark *::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* Custom thin scrollbar styles (legacy support) */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db #ffffff;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
 }
 
 .scrollbar-thin::-webkit-scrollbar {
-  width: 6px;
+  width: 3px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  background: #ffffff;
-  border-radius: 3px;
+  background: transparent;
+  border-radius: 2px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 2px;
   transition: background-color 0.2s ease;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-.scrollbar-track-gray-100::-webkit-scrollbar-track {
-  background: #ffffff;
-}
-
-.scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-}
-
-.hover\:scrollbar-thumb-gray-400::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: rgba(156, 163, 175, 0.5);
 }

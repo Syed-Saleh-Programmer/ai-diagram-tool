@@ -21,9 +21,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {
             "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]": variant === "default" || variant === "primary",
             "bg-[var(--destructive)] text-[var(--destructive-foreground)] hover:bg-[var(--destructive)]/90": variant === "destructive",
-            "border border-[var(--border)] bg-white hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]": variant === "outline",
+            "border border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]": variant === "outline",
             "bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:bg-[var(--secondary)]/80": variant === "secondary",
-            "hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)]": variant === "ghost",
+            "hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] text-[var(--foreground)]": variant === "ghost",
             "underline-offset-4 hover:underline text-[var(--primary)]": variant === "link",
           },
           {

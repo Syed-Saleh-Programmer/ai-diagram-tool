@@ -67,7 +67,7 @@ export const DiagramViewer = memo(function DiagramViewer({
   if (isLoading) {
     return (
       <div className={cn(
-        "flex items-center justify-center min-h-[400px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50",
+        "flex items-center justify-center min-h-[400px] border-2 border-dashed border-[var(--border)] rounded-lg bg-[var(--muted)]",
         className
       )}>
         <LoadingSpinner size="lg" text="Rendering diagram..." />
@@ -78,10 +78,10 @@ export const DiagramViewer = memo(function DiagramViewer({
   if (error) {
     return (
       <div className={cn(
-        "flex flex-col items-center justify-center min-h-[400px] border-2 border-dashed border-red-300 rounded-lg bg-red-50 p-6",
+        "flex flex-col items-center justify-center min-h-[400px] border-2 border-dashed border-[var(--destructive)] rounded-lg bg-[var(--destructive)]/10 p-6",
         className
       )}>
-        <div className="text-red-600 text-center">
+        <div className="text-[var(--destructive)] text-center">
           <h3 className="text-lg font-semibold mb-2">Error Rendering Diagram</h3>
           <p className="text-sm mb-4">{error}</p>
           {onRetry && (
@@ -98,10 +98,10 @@ export const DiagramViewer = memo(function DiagramViewer({
   if (!hasContent) {
     return (
       <div className={cn(
-        "flex items-center justify-center min-h-full border-2 border-dashed border-gray-300 rounded-lg bg-gray-50",
+        "flex items-center justify-center min-h-full border-2 border-dashed border-[var(--border)] rounded-lg bg-[var(--muted)]",
         className
       )}>
-        <div className="text-center text-gray-500">
+        <div className="text-center text-[var(--muted-foreground)]">
           <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-medium mb-2">No Diagram Generated</h3>
           <p className="text-sm">Generate a diagram to see it here</p>
@@ -112,16 +112,16 @@ export const DiagramViewer = memo(function DiagramViewer({
 
   return (
     <div className={cn(
-      "relative border rounded-lg overflow-hidden bg-white",
+      "relative border border-[var(--border)] rounded-lg overflow-hidden bg-[var(--background)]",
       isFullscreen && "fixed inset-0 z-50 border-none rounded-none",
       className
     )}>
       {/* Toolbar */}
-      <div className="absolute top-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-b z-10 p-2">
+      <div className="absolute top-0 left-0 right-0 bg-[var(--background)]/90 backdrop-blur-sm border-b border-[var(--border)] z-10 p-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             {/* View Mode Toggle */}
-            <div className="flex border rounded-md">
+            <div className="flex border border-[var(--border)] rounded-md">
               <Button
                 variant={viewMode === 'svg' ? 'default' : 'ghost'}
                 size="sm"
@@ -145,11 +145,11 @@ export const DiagramViewer = memo(function DiagramViewer({
             </div>
 
             {/* Zoom Controls */}
-            <div className="flex items-center space-x-1 border rounded-md">
+            <div className="flex items-center space-x-1 border border-[var(--border)] rounded-md">
               <Button variant="ghost" size="sm" onClick={handleZoomOut}>
                 <ZoomOut className="h-4 w-4" />
               </Button>
-              <span className="px-2 text-xs font-medium min-w-[60px] text-center">
+              <span className="px-2 text-xs font-medium min-w-[60px] text-center text-[var(--foreground)]">
                 {Math.round(zoom * 100)}%
               </span>
               <Button variant="ghost" size="sm" onClick={handleZoomIn}>
@@ -214,7 +214,7 @@ export const DiagramViewer = memo(function DiagramViewer({
               className="transition-transform duration-200 max-w-none"
             />
           ) : (
-            <div className="text-center text-gray-500">
+            <div className="text-center text-[var(--muted-foreground)]">
               <p className="text-sm">
                 {viewMode === 'svg' ? 'SVG content not available' : 'PNG content not available'}
               </p>
@@ -226,7 +226,7 @@ export const DiagramViewer = memo(function DiagramViewer({
       {/* Fullscreen overlay */}
       {isFullscreen && (
         <div 
-          className="absolute inset-0 bg-black/50 -z-10"
+          className="absolute inset-0 bg-[var(--background)]/50 -z-10"
           onClick={toggleFullscreen}
         />
       )}
