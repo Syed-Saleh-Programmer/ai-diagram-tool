@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateDiagram } from '@/lib/ai-providers';
+import { createCompressedResponse } from '@/lib/compression';
+import { diagramCache, createDiagramCacheKey } from '@/lib/cache';
 import { GenerateRequest, GenerateResponse, DiagramType } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
@@ -51,11 +53,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check cache first
+    const cacheKey = createDiagramCacheKey(body.description.trim(), body.diagramType || 'component');
+    const cachedResult = diagramCache.get(cacheKey);
+    
+    if (cachedResult) {
+      const response: GenerateResponse = {
+        description: cachedResult.description,
+        plantuml: cachedResult.plantuml,
+        diagramType: cachedResult.diagramType as DiagramType
+      };
+      
+      return createCompressedResponse(response, 200);
+    }
+
     // Generate diagram using AI
     const result = await generateDiagram(
       body.description.trim(),
       body.diagramType || 'component'
     );
+
+    // Cache the result
+    diagramCache.set(cacheKey, {
+      description: result.description,
+      plantuml: result.plantuml,
+      diagramType: result.diagramType
+    }, 24 * 60 * 60 * 1000); // Cache for 24 hours
 
     // Prepare response
     const response: GenerateResponse = {
@@ -64,7 +87,7 @@ export async function POST(request: NextRequest) {
       diagramType: result.diagramType
     };
 
-    return NextResponse.json(response, { status: 200 });
+    return createCompressedResponse(response, 200);
 
   } catch (error) {
     console.error('Error in /api/generate:', error);

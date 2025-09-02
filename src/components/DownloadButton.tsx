@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   Select,
@@ -29,7 +29,7 @@ interface DownloadButtonProps {
   className?: string;
 }
 
-export function DownloadButton({
+export const DownloadButton = memo(function DownloadButton({
   svgContent,
   pngContent,
   plantumlContent,
@@ -215,4 +215,4 @@ export function DownloadButton({
       </Button>
     </div>
   );
-}
+});

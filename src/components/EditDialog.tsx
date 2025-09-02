@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,7 +36,7 @@ const EDIT_SUGGESTIONS = [
   "Include caching layer in the system"
 ];
 
-export function EditDialog({
+export const EditDialog = memo(function EditDialog({
   isOpen,
   onOpenChange,
   onEdit,
@@ -226,4 +226,4 @@ export function EditDialog({
       </Dialog.Portal>
     </Dialog.Root>
   );
-}
+});

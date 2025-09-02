@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { DownloadButton } from '@/components/DownloadButton';
@@ -30,7 +30,7 @@ interface DiagramViewerProps {
   disabled?: boolean;
 }
 
-export function DiagramViewer({
+export const DiagramViewer = memo(function DiagramViewer({
   svgContent,
   pngContent,
   isLoading = false,
@@ -232,4 +232,4 @@ export function DiagramViewer({
       )}
     </div>
   );
-}
+});

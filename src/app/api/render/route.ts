@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { renderPlantUMLWeb, validatePlantUML } from '@/lib/plantuml';
+import { minifySVG, createCompressedResponse } from '@/lib/compression';
+import { renderCache, createRenderCacheKey } from '@/lib/cache';
 import { RenderRequest, RenderResponse } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
@@ -45,16 +47,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check cache first
+    const cacheKey = createRenderCacheKey(body.plantuml.trim(), format);
+    const cachedResult = renderCache.get(cacheKey);
+    
+    if (cachedResult) {
+      const response: RenderResponse = {
+        data: cachedResult,
+        format: format
+      };
+      
+      return createCompressedResponse(response, 200);
+    }
+
     // Render diagram
     const renderedData = await renderPlantUMLWeb(body.plantuml.trim(), format);
 
+    // Optimize the rendered data
+    const optimizedData = format === 'svg' ? minifySVG(renderedData) : renderedData;
+
+    // Cache the result
+    renderCache.set(cacheKey, optimizedData, 60 * 60 * 1000); // Cache for 1 hour
+
     // Prepare response
     const response: RenderResponse = {
-      data: renderedData,
+      data: optimizedData,
       format: format
     };
 
-    return NextResponse.json(response, { status: 200 });
+    return createCompressedResponse(response, 200);
 
   } catch (error) {
     console.error('Error in /api/render:', error);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { copyToClipboard } from '@/lib/utils';
@@ -26,7 +26,7 @@ interface TextOutputProps {
   className?: string;
 }
 
-export function TextOutput({
+export const TextOutput = memo(function TextOutput({
   description,
   plantuml,
   isLoading = false,
@@ -382,4 +382,4 @@ export function TextOutput({
       )}
     </div>
   );
-}
+});

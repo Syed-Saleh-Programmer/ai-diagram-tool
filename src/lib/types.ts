@@ -49,12 +49,6 @@ export type DiagramType =
 
 export type AIProvider = 'google' | 'openai' | 'anthropic';
 
-export interface AIProviderConfig {
-  provider: AIProvider;
-  apiKey: string;
-  model?: string;
-}
-
 export interface DiagramState {
   isGenerating: boolean;
   isEditing: boolean;
@@ -62,13 +56,6 @@ export interface DiagramState {
   data: DiagramData | null;
   error: string | null;
   history: DiagramData[];
-}
-
-export interface PlantUMLConfig {
-  theme?: string;
-  direction?: 'top to bottom' | 'left to right';
-  scale?: number;
-  format?: 'svg' | 'png';
 }
 
 // Error types

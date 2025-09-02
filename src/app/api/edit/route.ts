@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { editDiagram } from '@/lib/ai-providers';
 import { validatePlantUML } from '@/lib/plantuml';
+import { createCompressedResponse } from '@/lib/compression';
 import { EditRequest, EditResponse } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       changes: result.changes
     };
 
-    return NextResponse.json(response, { status: 200 });
+    return createCompressedResponse(response, 200);
 
   } catch (error) {
     console.error('Error in /api/edit:', error);

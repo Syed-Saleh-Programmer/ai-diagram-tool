@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { DiagramData, DiagramState, DiagramType, GenerateRequest, EditRequest, RenderRequest } from '@/lib/types';
 
 interface UseDiagramOptions {
@@ -15,6 +15,9 @@ export function useDiagram(options: UseDiagramOptions = {}) {
     error: null,
     history: []
   });
+
+  // Request cancellation
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const setError = useCallback((error: string) => {
     setState(prev => ({ ...prev, error }));
@@ -41,6 +44,12 @@ export function useDiagram(options: UseDiagramOptions = {}) {
       return;
     }
 
+    // Cancel previous request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     setState(prev => ({ ...prev, isGenerating: true, error: null }));
     clearError();
 
@@ -55,7 +64,8 @@ export function useDiagram(options: UseDiagramOptions = {}) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(request)
+        body: JSON.stringify(request),
+        signal: abortControllerRef.current.signal
       });
 
       if (!response.ok) {
@@ -86,6 +96,12 @@ export function useDiagram(options: UseDiagramOptions = {}) {
       return diagramData;
 
     } catch (error) {
+      // Don't set error if request was aborted
+      if (error instanceof Error && error.name === 'AbortError') {
+        setState(prev => ({ ...prev, isGenerating: false }));
+        return;
+      }
+      
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       setError(errorMessage);
       setState(prev => ({ ...prev, isGenerating: false }));
